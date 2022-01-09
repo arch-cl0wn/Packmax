@@ -1,4 +1,4 @@
-# 3D bin-packing - text based python script
+# PackMax
 
 Simple python script that simulates the packaging of rectangular boxes of any size.
 
