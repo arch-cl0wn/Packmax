@@ -1,6 +1,6 @@
-# algorithm's module
+    # algorithm's module
 import _3dbp
-
+import csv
 def print_script_info():
     print("Simple python script that simulates the packaging of rectangular boxes of any size.")
     print("Check out the readMe.md file for more info.")
@@ -16,7 +16,15 @@ def print_options():
     print("\"unpacked items info\" - get unpacked items info")
     print("\"pack items\" - pack items from items_list to bin")
     print("\"bin items info\" - get bin items info")
+    print("\"export data\" - export the data as a csv file")
     print("\"remove bin items\" - remove all the items from current bin")
+
+def vpython_preprocess(lis):
+    lis.insert(5,1)
+    for i in range(3):
+        lis[3][i]+=lis[i]/2
+        lis[i]=float(lis[i])
+    return lis
 
 # Print script info right after script started
 print_script_info()
@@ -26,7 +34,7 @@ print_options()
 
 # initialize bin
 bin = None
-
+pno = 1
 # initialize unpacked items list
 items_list = _3dbp.Items_List()
 
@@ -61,10 +69,13 @@ while True:
         width = input("    Type item's width: ")
         height = input("    Type item's height: ")
         depth = input("    Type item's depth: ")
-        try:
-            items_list.add_item(_3dbp.Item("Item", int(width), int(height), int(depth)))
-        except ValueError as e:
-            print("Error:", e)
+        amount= int(input("    Type item's amount: "))
+        for i in range(amount):
+            try:
+                items_list.add_item(_3dbp.Item("Item", int(width), int(height), int(depth), int(pno)))
+            except ValueError as e:
+                print("Error:", e)
+        pno+=1
     elif option == "delete item":
         # get index
         index = input("    Type item's index: ")
@@ -89,6 +100,20 @@ while True:
             for index in range(len(bin.items)):
                 print(str(index) + ")")
                 bin.items[index].print_data()
+        else:
+            print("There is no existing bin!")
+    elif option == "export data":
+        # export info about bin's items
+        if bin != None:
+            lis=[]
+            for index in range(len(bin.items)):
+                plis= bin.items[index].list_data()
+                plis= vpython_preprocess(plis)
+                lis.append(plis)
+            with open('plist.csv','w',newline='') as f:
+                writer=csv.writer(f,delimiter=';')
+                writer.writerows(lis)
+
         else:
             print("There is no existing bin!")
     elif option == "remove bin items":

@@ -7,6 +7,7 @@ truck_list=[['407 TEMPO',9.8,6.4,7],['32 Feet Container',32,8.3,8.2]]
 prod_list=[['Home Locker',250,350,320],['Fire Resistant Safe',545,415,435],['Direct Cool refrigerator',1180,576,623],['Slimline',1835,485,50],['Wardrobe',1980,1018,537]]
 plist_in=[]
 tlist=[]
+ptw=1
 #tlist format [length,width,height,truck_no]
 plist=[]
 #plist format [width,height,depth,[position vector],prod_id,truck_no,orientation(0 or 1)]
@@ -22,7 +23,7 @@ textures = ['https://i.imgur.com/oas0l7s.png',
                     'https://i.imgur.com/grcVF5q.png',
                     'https://i.imgur.com/OvPQfs5.png']
 
-with open ('plist1.csv',mode='r')as csvfile:
+with open ('C:\\Users\\anush\\Desktop\\All_Projects\\PackMax\\Packmax\\plist.csv',mode='r')as csvfile:
         myreader=csv.reader(csvfile,delimiter=';')
         for i in myreader:
             plist_in.append(i)
@@ -53,7 +54,7 @@ for i in plist_in:
 
 
 
-with open ('tlist.csv',mode='r')as csvfile:
+with open ('C:\\Users\\anush\\Desktop\\All_Projects\\PackMax\\Packmax\\tlist.csv',mode='r') as csvfile:
         myreader=csv.reader(csvfile,delimiter=';')
         for i in myreader:
             tlist.append(i)
@@ -167,10 +168,12 @@ def smart_SetScene(prod_list):
     vp.radio(text='Pause/Play',bind=pauseplay)
     vp.scene.append_to_caption('                    ')
     vp.button(text='Next',bind=NextProd, width=80,align='left')
+
 def truck3d(tl,tw,th,tno=1):
+    global ptw
     tnol, tnow, tnoh = 0,0,0
     if tno != 1:
-        tnow=(tno - 1)*(tw+500)
+        tnow=(tno - 1)*(ptw+500)
         
     tex='truck'+str(tno)
     vp.box(pos=vp.vector(   tnow-0.5,     tnoh+(th/2),    tnol+(tl/2)), length=1, width=tl,height=th,opacity=0.4) # Truck Right 3D
@@ -179,7 +182,7 @@ def truck3d(tl,tw,th,tno=1):
     vp.label(pos=vp.vector(tnow+(tw/2),     tnoh+th-0.5,    tnol+(tl/2)),text=tex) # Truck Label
     vp.box(pos=vp.vector(tnow+(tw/2),        tnoh-0.5,    tnol+(tl/2)), length=tw,width=tl,height=1, opacity=0.4) # Truck Base 3D
     vp.box(pos=vp.vector(tnow+(tw/2), tnoh+(th/2)-0.5,           tnol), length=tw,width=1, height=th,opacity=0.4) # Truck Back 3D
-
+    ptw=tw
 def product3d(pl,pw,ph,poi,pid,ori):
     global textures,nx,px,Speed
     pid-=1
@@ -188,6 +191,16 @@ def product3d(pl,pw,ph,poi,pid,ori):
     posi=list(poi)
     posi[2]+=500
     prod=vp.box(pos=vp.vector(posi[0],posi[1],posi[2]),length=pl,width=pw,height=ph,texture=textures[pid], opacity=0.6) #Product 3D
+    if ori==1:
+        if Speed!=0:
+            time.sleep(0.25/Speed)
+            prod.rotate(angle=45,axis=vp.vector(0,1,0))
+            time.sleep(0.25/Speed)
+            prod.rotate(angle=90,axis=vp.vector(0,1,0))
+        else:
+            while Speed==0:
+                pass
+        
     for o in range(25):
         prod.pos-=vp.vector(0,0,20)
         if Speed!=0:
@@ -230,12 +243,14 @@ currentprod,nx,px=0,False,False
 
 for i in tlist:
     currentprod=0
-    tno=int(i[3])
-    truck3d(float(i[0]),float(i[1]),float(i[2]),tno)
+    tno=int(float(i[3]))
+
+    truck3d(float(i[2]),float(i[1]),float(i[0]),tno)
     while currentprod<=(len(plist)-1):
         p=plist[currentprod]
         if p[5]==tno:
-            product3d(p[0],p[1],p[2],p[3],p[4],p[6])
+            product3d(p[0],p[2],p[1],p[3],p[4],p[6])
         if SA==1:
             currentprod+=1
+
 

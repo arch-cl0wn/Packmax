@@ -85,15 +85,16 @@ class Bin(object):
         return True
 
 class Item(object):
-    def __init__(self, name, width, height, depth):
+    def __init__(self, name, width, height, depth,id):
         self.name = name
 
         # dimensions w x h x d
         self.width = int(width)
         self.height = int(height)
         self.depth = int(depth)
+        self.id= int(id)
 
-        if self.width <= 0 or self.height <= 0 or self.depth <= 0:
+        if self.width <= 0 or self.height <= 0 or self.depth <= 0 or self.id<=0 :
             print("Wrong item dimensions")
             exit(1)
 
@@ -105,7 +106,10 @@ class Item(object):
         self.RT = 0
 
     def print_data(self):
-        print(self.name, "|", "Dimensions:", self.width, "x", self.height, "x", self.depth, "|", "Position [x, y, z]:", self.pos, "| rotation type:", self.RT)
+        print(self.name, self.id, "|", "Dimensions:", self.width, "x", self.height, "x", self.depth, "|", "Position [x, y, z]:", self.pos, "| rotation type:", self.RT)
+    def list_data(self):
+        plis=[self.width,self.height,self.depth,self.pos,self.id,self.RT]
+        return plis
 
     # rotations
     def rotate(self, type):
@@ -139,6 +143,7 @@ class Items_List(object):
             for index in range(len(self.items)):
                 print(str(index) + ")")
                 self.items[index].print_data()
+    
 
 def get_items_total_volume(item_list):
     volume_T = 0
