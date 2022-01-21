@@ -236,7 +236,7 @@ def ShowAll(c):
     if c.checked==False:
         SA=0
 
-smart_SetScene(prod_list)
+PC_SetScene(prod_list)
 
 #main animation
 currentprod,nx,px=0,False,False
