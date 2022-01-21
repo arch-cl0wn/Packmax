@@ -49,8 +49,8 @@ class Bin(object):
 
         # edit 3D vector, put 1 where the item is located
         for i in range(position[0], position[0] + item.rotate(type)[0]):
-            for j in range(position[1], position[1] + item.rotate(type)[1]):
-                for k in range(position[2], position[2] + item.rotate(type)[2]):
+            for j in range(position[1], position[1] + item.rotate(type)[0]):
+                for k in range(position[2], position[2] + item.rotate(type)[0]):
                     self.vector_3D[i][j][k] = 1
 
         # edit remaining space
@@ -185,9 +185,9 @@ def bp3D(current_bin, Items): # (Bin object, list of Item objects)
         # try item's every rotation
         for rotation_type in range(6):
             # if it don't fit try the next one
-            if notPacked[index].rotate(rotation_type)[0] > current_bin.width or \
-                notPacked[index].rotate(rotation_type)[1] > current_bin.height or \
-                notPacked[index].rotate(rotation_type)[2] > current_bin.depth:
+            if notPacked[index].rotate(rotation_type)[0] > current_bin.width :
+                # notPacked[index].rotate(rotation_type)[1] > current_bin.height or \
+                # notPacked[index].rotate(rotation_type)[2] > current_bin.depth:
                 pass
             # if I find an item that fits, pack it and break
             else:
