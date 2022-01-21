@@ -25,7 +25,8 @@ def vpython_preprocess(lis):
         lis[3][i]+=lis[i]/2
         lis[i]=float(lis[i])
     return lis
-
+def csvinput():
+    pass
 # Print script info right after script started
 print_script_info()
 
@@ -37,6 +38,7 @@ bin = None
 pno = 1
 # initialize unpacked items list
 items_list = _3dbp.Items_List()
+t=[]
 
 # Script's main loop
 while True:
@@ -53,6 +55,23 @@ while True:
         width = input("    Type bin's width: ")
         height = input("    Type bin's height: ")
         depth = input("    Type bin's depth: ")
+        try:
+            bin = _3dbp.Bin("Bin", int(width), int(height), int(depth))
+        except ValueError as e:
+            print("Error:", e)
+            bin = None
+    elif option == "import bin":
+        # get bin's info from csv file named 't_dispatch.csv'
+        # # format for _dispatch is:
+        ''' 
+        width,height,depth
+        ''' 
+        with open("C:\\Users\\anush\\Desktop\\All_Projects\\PackMax\\Packmax\\t_dispatch.csv", "r",newline='') as f:
+            reader=csv.reader(f,delimiter=',')
+            for row in reader:
+                width= row[0]
+                height= row[1]
+                depth= row[2]
         try:
             bin = _3dbp.Bin("Bin", int(width), int(height), int(depth))
         except ValueError as e:
@@ -76,6 +95,29 @@ while True:
             except ValueError as e:
                 print("Error:", e)
         pno+=1
+    elif option == "import items":
+        # import items info from 'p_dispatch.csv'
+        # format for p_dispatch is:
+        ''' 
+        width1,height1,depth1,amount1
+        width2,height2,depth2,amount2
+        width3,height3,depth3,amount3
+        '''
+        with open ('C:\\Users\\anush\\Desktop\\All_Projects\\PackMax\\Packmax\\p_dispatch.csv','r',newline='') as f:
+            reader=csv.reader(f,delimiter=',')
+            for row in reader:
+                width= row[0]
+                height= row[1]
+                depth= row[2]
+                amount= int(row[3])
+                for i in range(amount):
+                    try:
+                        items_list.add_item(_3dbp.Item("Item", int(width), int(height), int(depth), int(pno)))
+                    except ValueError as e:
+                        print("Error:", e)
+                pno+=1
+
+
     elif option == "delete item":
         # get index
         index = input("    Type item's index: ")
