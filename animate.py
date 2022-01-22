@@ -23,7 +23,7 @@ textures = ['https://i.imgur.com/oas0l7s.png',
                     'https://i.imgur.com/grcVF5q.png',
                     'https://i.imgur.com/OvPQfs5.png']
 
-with open ('C:\\Users\\anush\\Desktop\\All_Projects\\PackMax\\Packmax\\plist.csv',mode='r')as csvfile:
+with open ('C:\\Users\\anush\\Desktop\\All_Projects\\PackMax\\Packmax\\plist1.csv',mode='r')as csvfile:
         myreader=csv.reader(csvfile,delimiter=';')
         for i in myreader:
             plist_in.append(i)

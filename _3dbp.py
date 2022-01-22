@@ -185,9 +185,15 @@ def bp3D(current_bin, Items): # (Bin object, list of Item objects)
         # try item's every rotation
         for rotation_type in range(6):
             # if it don't fit try the next one
+<<<<<<< HEAD
             if notPacked[index].rotate(rotation_type)[0] > current_bin.width :
                 # notPacked[index].rotate(rotation_type)[1] > current_bin.height or \
                 # notPacked[index].rotate(rotation_type)[2] > current_bin.depth:
+=======
+            if notPacked[index].rotate(rotation_type)[0] > current_bin.width or \
+                 notPacked[index].rotate(rotation_type)[1] > current_bin.height :
+                
+>>>>>>> 2542e6b190e564bd4534e15dd83f000d23783802
                 pass
             # if I find an item that fits, pack it and break
             else:
