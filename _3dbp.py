@@ -49,8 +49,8 @@ class Bin(object):
 
         # edit 3D vector, put 1 where the item is located
         for i in range(position[0], position[0] + item.rotate(type)[0]):
-            for j in range(position[1], position[1] + item.rotate(type)[0]):
-                for k in range(position[2], position[2] + item.rotate(type)[0]):
+            for j in range(position[1], position[1] + item.rotate(type)[1]):
+                for k in range(position[2], position[2] + item.rotate(type)[2]):
                     self.vector_3D[i][j][k] = 1
 
         # edit remaining space
@@ -66,7 +66,7 @@ class Bin(object):
     def can_be_packed(self, item, position, type):
         for i in range(position[0], position[0] + item.rotate(type)[0]):
             for j in range(position[1], position[1] + item.rotate(type)[1]):
-                for k in range(position[2], position[2] + item.rotate(type)[2]):
+                for k in range(position[2], position[2] + item.rotate(type)[1]):
                     # check for bin's limits
                     if i >= self.width or j >= self.height or k >= self.depth:
                         return False
