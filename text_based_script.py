@@ -102,7 +102,7 @@ while True:
         ''' 
         width,height,depth
         ''' 
-        with open("C:\\Users\\anush\\Desktop\\All_Projects\\PackMax\\Packmax\\t_dispatch.csv", "r",newline='') as f:
+        with open("/Users/shamoon/Projects/Packmax/t_dispatch.csv", "r",newline='') as f:
             reader=csv.reader(f,delimiter=',')
             for row in reader:
                 width= float(row[0])*30.48
@@ -144,7 +144,7 @@ while True:
         width2,height2,depth2,amount2
         width3,height3,depth3,amount3
         '''
-        with open ('C:\\Users\\anush\\Desktop\\All_Projects\\PackMax\\Packmax\\p_dispatch.csv','r',newline='') as f:
+        with open ('/Users/shamoon/Projects/Packmax/p_dispatch.csv','r',newline='') as f:
             reader=csv.reader(f,delimiter=',')
             for row in reader:
                 width= int(row[0])//10
