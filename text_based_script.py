@@ -21,8 +21,39 @@ def print_options():
 
 def vpython_preprocess(lis):
     lis.insert(5,1)
+    type=lis[6]
+    
+    if type == 0: # normal position
+        lis[3][0]+=lis[0]/2
+        lis[3][1]+=lis[1]/2
+        lis[3][2]+=lis[2]/2
+        #return (self.width, self.height, self.depth)
+    elif type == 1: # rotate Z
+        lis[3][1]+=lis[0]/2
+        lis[3][0]+=lis[1]/2
+        lis[3][2]+=lis[2]/2
+        #return (self.height, self.width, self.depth)
+    elif type == 2: # rotate Y
+        lis[3][0]+=lis[0]/2
+        lis[3][2]+=lis[1]/2
+        lis[3][1]+=lis[2]/2
+        #return (self.width, self.depth, self.height)
+    elif type == 3: # rotate X, rotate Y
+        lis[3][2]+=lis[0]/2
+        lis[3][0]+=lis[1]/2
+        lis[3][1]+=lis[2]/2
+        #return (self.depth, self.width, self.height)
+    elif type == 4: # rotate X
+        lis[3][2]+=lis[0]/2
+        lis[3][1]+=lis[1]/2
+        lis[3][0]+=lis[2]/2
+        #return (self.depth, self.height, self.width)
+    else: # rotate X, rotate Z
+        lis[3][1]+=lis[0]/2
+        lis[3][2]+=lis[1]/2
+        lis[3][0]+=lis[2]/2
+        #return (self.height, self.depth, self.width)
     for i in range(3):
-        lis[3][i]+=lis[i]/2
         lis[i]=float(lis[i])
     return lis
 def csvinput():
@@ -52,11 +83,16 @@ while True:
         print_options()
     elif option == "create bin":
         # get bin's info
-        width = input("    Type bin's width: ")
-        height = input("    Type bin's height: ")
-        depth = input("    Type bin's depth: ")
+        width =float( input("    Type bin's width: "))
+        height = float(input("    Type bin's height: "))
+        depth = float(input("    Type bin's depth: "))
+        width= width*30.48
+        height= height*30.48
+        depth= depth*30.48
+        weightlim=float(input("    Type bin's weightlimit: "))
+        weightlim=weightlim*1000
         try:
-            bin = _3dbp.Bin("Bin", int(width), int(height), int(depth))
+            bin = _3dbp.Bin("Bin", int(width), int(height), int(depth), int(weightlim))
         except ValueError as e:
             print("Error:", e)
             bin = None
@@ -69,11 +105,12 @@ while True:
         with open("C:\\Users\\anush\\Desktop\\All_Projects\\PackMax\\Packmax\\t_dispatch.csv", "r",newline='') as f:
             reader=csv.reader(f,delimiter=',')
             for row in reader:
-                width= row[0]
-                height= row[1]
-                depth= row[2]
+                width= float(row[0])*30.48
+                height= float(row[1])*30.48
+                depth= float(row[2])*30.48
+                weightlim=float(row[3])*1000
         try:
-            bin = _3dbp.Bin("Bin", int(width), int(height), int(depth))
+            bin = _3dbp.Bin("Bin", int(width), int(height), int(depth), int(weightlim))
         except ValueError as e:
             print("Error:", e)
             bin = None
@@ -85,13 +122,17 @@ while True:
             print("There is no existing bin!")
     elif option == "add item":
         # get item's info
-        width = input("    Type item's width: ")
-        height = input("    Type item's height: ")
-        depth = input("    Type item's depth: ")
+        width = int(input("    Type item's width: "))
+        height = int(input("    Type item's height: "))
+        depth = int(input("    Type item's depth: "))
+        weight= int(input("    Type item's weight:"))
         amount= int(input("    Type item's amount: "))
+        width= width//10
+        height= height//10
+        depth= depth//10
         for i in range(amount):
             try:
-                items_list.add_item(_3dbp.Item("Item", int(width), int(height), int(depth), int(pno)))
+                items_list.add_item(_3dbp.Item("Item", int(width), int(height), int(depth), int(pno), int(weight)))
             except ValueError as e:
                 print("Error:", e)
         pno+=1
@@ -106,13 +147,14 @@ while True:
         with open ('C:\\Users\\anush\\Desktop\\All_Projects\\PackMax\\Packmax\\p_dispatch.csv','r',newline='') as f:
             reader=csv.reader(f,delimiter=',')
             for row in reader:
-                width= row[0]
-                height= row[1]
-                depth= row[2]
+                width= int(row[0])//10
+                height= int(row[1])//10
+                depth= int(row[2])//10
                 amount= int(row[3])
+                weight= int(row[4])
                 for i in range(amount):
                     try:
-                        items_list.add_item(_3dbp.Item("Item", int(width), int(height), int(depth), int(pno)))
+                        items_list.add_item(_3dbp.Item("Item", int(width), int(height), int(depth), int(pno), int(weight)))
                     except ValueError as e:
                         print("Error:", e)
                 pno+=1
@@ -166,3 +208,4 @@ while True:
 
     # blankline
     print("")
+
