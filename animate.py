@@ -23,7 +23,7 @@ textures = ['https://i.imgur.com/oas0l7s.png',
                     'https://i.imgur.com/grcVF5q.png',
                     'https://i.imgur.com/OvPQfs5.png']
 
-with open ('C:\\Users\\anush\\Desktop\\All_Projects\\PackMax\\Packmax\\plist1.csv',mode='r')as csvfile:
+with open ('C:\\Users\\anush\\Desktop\\All_Projects\\PackMax\\Packmax\\plist.csv',mode='r')as csvfile:
         myreader=csv.reader(csvfile,delimiter=';')
         for i in myreader:
             plist_in.append(i)
@@ -52,12 +52,21 @@ for i in plist_in:
     plist.append(lis)
 
 
+def approximate(i):
+    dec=int(i)
+    pnt=i-dec
+    if pnt>=0.5:
+        pnt=1
+    else:
+        pnt=0
+    i=dec+pnt
+    return int(i)
 
-
-with open ('C:\\Users\\anush\\Desktop\\All_Projects\\PackMax\\Packmax\\tlist.csv',mode='r') as csvfile:
-        myreader=csv.reader(csvfile,delimiter=';')
+with open ('C:\\Users\\anush\\Desktop\\All_Projects\\PackMax\\Packmax\\t_dispatch.csv',mode='r',newline='') as csvfile:
+        myreader=csv.reader(csvfile,delimiter=',')
         for i in myreader:
             tlist.append(i)
+
 global Speed, SA
 Speed=1
 SA=False
@@ -67,7 +76,9 @@ def PC_SetScene(prod_list):
     vp.scene.width = 1440
     vp.scene.height = 620
 
-    '''Product index'''
+    '''
+
+   
     tnol,tnow,tnoh=0,-2550,9000
     bl,bh,mpw=200,200,0
     for produ in prod_list:
@@ -89,21 +100,22 @@ def PC_SetScene(prod_list):
             tx=0
         tnoh+=ph+50
     bh+=prod_list[0][3]
+
+
     
-    '''box for Product index'''
     vp.cylinder(pos=vp.vector((tnow-(mpw)+100),(tnoh-bh-100),tnol),length=bh,radius=5,axis=vp.vector(0,10,0))
     vp.cylinder(pos=vp.vector((tnow-(mpw)+100),(tnoh-bh-100),tnol),length=bl,radius=5,axis=vp.vector(10,0,0))
     vp.cylinder(pos=vp.vector((tnow-(mpw)+100+bl),(tnoh-bh-100),tnol),length=bh,radius=5,axis=vp.vector(0,10,0))
     vp.cylinder(pos=vp.vector((tnow-(mpw)+100),(tnoh-100),tnol),length=bl,radius=5,axis=vp.vector(10,0,0))
     vp.label(pos=vp.vector((tnow-(mpw)+100+(bl/2)),(tnoh-100),tnol),text='Index')
     
-    '''Axis'''
     vp.arrow(color=vp.color.red, pos=vp.vector(-2550,6000,0), axis=vp.vector(10,0,0), radius=5,length=2000,opacity=0.5)    # X axis
     vp.label(pos=vp.vector(-489,6000,0), text="length", color=vp.color.red, height=15, box=0,opacity=0.5)        # X Label
     vp.arrow(color=vp.color.green, pos=vp.vector(-2550,6000,0), axis=vp.vector(0,10,0), radius=5,length=2000,opacity=0.5)  # Y axis
     vp.label(pos=vp.vector(-2550,8011,0), text="height", color=vp.color.green, height=15, box=0,opacity=0.5)     # Y Label
     vp.arrow(color=vp.color.blue, pos=vp.vector(-2550,6000,0), axis=vp.vector(0,0,10), radius=5,length=2000,opacity=0.5)   # Z axis
     vp.label(pos=vp.vector(-2550,6000,2011), text="width", color=vp.color.blue, height=15, box=0,opacity=0.5)    # Z Label
+    '''
     '''menu'''
     vp.button(text='Next',bind=NextProd)
     vp.slider(text='Speed',bind=Speedconc,min=0,max=400,value=10)
@@ -116,47 +128,6 @@ def smart_SetScene(prod_list):
     tx=0   
     vp.scene.width = 1080
     vp.scene.height = 1500
-    tnol,tnow,tnoh=0,-2550,9000
-    
-    bl,bh,mpw=200,200,0
-    for produ in prod_list:
-        pw=produ[2]
-        if pw>mpw:
-            mpw=pw
-    bl+= 5*mpw
-    
-    for produ in prod_list:
-        pl=produ[1]
-        pw=produ[2]
-        ph=produ[3]
-        pn=produ[0]
-
-        bh+=ph
-        vp.box(pos=vp.vector(tnow,tnoh-0.5,tnol+(pl/2)),length=pl,width=pw,height=ph,texture=textures[tx], opacity=0.6)
-        vp.label(pos=vp.vector(tnow+(pw)+(mpw),tnoh-0.5,tnol+(pl/2)+pl),text=pn,color=vp.color.blue,opacity=0.5,box=0,height=15)
-        if tx<=10:
-            tx+=1
-        else:
-            tx=0
-        tnoh+=ph+50
-
-    bh+=prod_list[0][3]
-    
-    '''Product index'''
-    vp.cylinder(pos=vp.vector((tnow-(mpw)+100),(tnoh-bh-100),tnol),length=bh,radius=5,axis=vp.vector(0,10,0))
-    vp.cylinder(pos=vp.vector((tnow-(mpw)+100),(tnoh-bh-100),tnol),length=bl,radius=5,axis=vp.vector(10,0,0))
-    vp.cylinder(pos=vp.vector((tnow-(mpw)+100+bl),(tnoh-bh-100),tnol),length=bh,radius=5,axis=vp.vector(0,10,0))
-    vp.cylinder(pos=vp.vector((tnow-(mpw)+100),(tnoh-100),tnol),length=bl,radius=5,axis=vp.vector(10,0,0))
-    vp.label(pos=vp.vector((tnow-(mpw)+100+(bl/2)),(tnoh-100),tnol),text='Index')
-    
-    '''Axis'''
-    vp.arrow(color=vp.color.red, pos=vp.vector(-2550,6000,0), axis=vp.vector(10,0,0), radius=5,length=2000,opacity=0.5)    # X axis
-    vp.label(pos=vp.vector(-489,6000,0), text="length", color=vp.color.red, height=15, box=0,opacity=0.5)        # X Label
-    vp.arrow(color=vp.color.green, pos=vp.vector(-2550,6000,0), axis=vp.vector(0,10,0), radius=5,length=2000,opacity=0.5)  # Y axis
-    vp.label(pos=vp.vector(-2550,8011,0), text="height", color=vp.color.green, height=15, box=0,opacity=0.5)     # Y Label
-    vp.arrow(color=vp.color.blue, pos=vp.vector(-2550,6000,0), axis=vp.vector(0,0,10), radius=5,length=2000,opacity=0.5)   # Z axis
-    vp.label(pos=vp.vector(-2550,6000,2011), text="width", color=vp.color.blue, height=15, box=0,opacity=0.5)    # Z Label
-    '''menu'''
     vp.scene.append_to_caption('\n\n')
     vp.button(text='Prev',bind=PrevProd, width=80,align='right')
     vp.scene.append_to_caption('                    ')
@@ -194,13 +165,48 @@ def product3d(pl,pw,ph,poi,pid,ori):
     if ori==1:
         if Speed!=0:
             time.sleep(0.25/Speed)
-            prod.rotate(angle=45,axis=vp.vector(0,1,0))
+            prod.rotate(angle=vp.radians(45),axis=vp.vector(0,0,1))
             time.sleep(0.25/Speed)
-            prod.rotate(angle=90,axis=vp.vector(0,1,0))
+            prod.rotate(angle=vp.radians(45),axis=vp.vector(0,0,1))
         else:
             while Speed==0:
                 pass
-        
+    elif ori==2:
+        if Speed!=0:
+            time.sleep(0.25/Speed)
+            prod.rotate(angle=vp.radians(45),axis=vp.vector(1,0,0))
+            time.sleep(0.25/Speed)
+            prod.rotate(angle=vp.radians(45),axis=vp.vector(1,0,0))
+        else:
+            while Speed==0:
+                pass
+    elif ori==3:
+        if Speed!=0:
+            time.sleep(0.25/Speed)
+            prod.rotate(angle=vp.radians(45),axis=vp.vector(1,1,0))
+            time.sleep(0.25/Speed)
+            prod.rotate(angle=vp.radians(45),axis=vp.vector(1,1,0))
+        else:
+            while Speed==0:
+                pass
+    elif ori==4:
+        if Speed!=0:
+            time.sleep(0.25/Speed)
+            prod.rotate(angle=vp.radians(45),axis=vp.vector(0,1,0))
+            time.sleep(0.25/Speed)
+            prod.rotate(angle=vp.radians(45),axis=vp.vector(0,1,0))
+        else:
+            while Speed==0:
+                pass
+    elif ori==5:
+        if Speed!=0:
+            time.sleep(0.25/Speed)
+            prod.rotate(angle=vp.radians(45),axis=vp.vector(1,0,1))
+            time.sleep(0.25/Speed)
+            prod.rotate(angle=vp.radians(45),axis=vp.vector(1,0,1))
+        else:
+            while Speed==0:
+                pass
     for o in range(25):
         prod.pos-=vp.vector(0,0,20)
         if Speed!=0:
@@ -208,6 +214,7 @@ def product3d(pl,pw,ph,poi,pid,ori):
         else:
             while Speed==0:
                 pass
+        
     posi=list(poi)
 
 
@@ -241,11 +248,13 @@ PC_SetScene(prod_list)
 #main animation
 currentprod,nx,px=0,False,False
 
+
+    
 for i in tlist:
     currentprod=0
+    print(tlist)
     tno=int(float(i[3]))
-
-    truck3d(float(i[2]),float(i[1]),float(i[0]),tno)
+    truck3d(float(i[2])*30.48,float(i[1])*30.48,float(i[0])*30.48,tno)
     while currentprod<=(len(plist)-1):
         p=plist[currentprod]
         if p[5]==tno:

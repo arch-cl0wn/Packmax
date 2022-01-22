@@ -12,7 +12,7 @@ class Bin(object):
         self.weightlim=int(weightlim)
 
         # conditions
-        if self.width <= 0 or self.height <= 0 or self.depth <= 0:
+        if self.width <= 0 or self.height <= 0 or self.depth <= 0 or self.weightlim <= 0:
             print("Wrong bin dimensions, they need to be > 0")
             exit(0)
 
@@ -20,7 +20,7 @@ class Bin(object):
         self.items = []
 
         self.remaining_space = self.width * self.height * self.depth
-
+        self.weight= 0
         # 3D representation for the bin
         self.vector_3D = []
         self.build_vector()
@@ -44,10 +44,11 @@ class Bin(object):
         print(self.name, "|", "Dimensions:", self.width, "x", self.height, "x", self.depth, "|", len(self.items), "items |", self.remaining_space, "remaining space")
 
     # pack the item in the current bin and edit item's properties(position and rotation type)
-    def pack(self, item, position, type):
+    def pack(self, item, position, type, wei=0):
         # add item to packed items
         self.items.append(item)
-
+        
+        
         # edit 3D vector, put 1 where the item is located
         for i in range(position[0], position[0] + item.rotate(type)[0]):
             for j in range(position[1], position[1] + item.rotate(type)[1]):
@@ -58,16 +59,19 @@ class Bin(object):
         volume = item.width * item.height * item.depth
         self.remaining_space -= volume
 
+        #edit weight carried by the truck
+        if (self.weight+wei)<=self.weightlim:
+            self.weight+=wei
         # change item's position
         item.pos = copy.deepcopy(list(position))
         # change item's rotation type
         item.RT = type
 
     # check if the item can be packed with this properties(position and rotation type)
-    def can_be_packed(self, item, position, type):
+    def can_be_packed(self, item, position, type, wei=0):
         for i in range(position[0], position[0] + item.rotate(type)[0]):
             for j in range(position[1], position[1] + item.rotate(type)[1]):
-                for k in range(position[2], position[2] + item.rotate(type)[2]):
+                for k in range(position[2], position[2] + item.rotate(type)[1]):
                     # check for bin's limits
                     if i >= self.width or j >= self.height or k >= self.depth:
                         return False
@@ -81,22 +85,22 @@ class Bin(object):
             for i in range(position[0], ceil((position[0] + item.rotate(type)[0]) / 2)):
                     for k in range(position[2], ceil((position[2] + item.rotate(type)[2]) / 2)):
                         if self.vector_3D[i][position[1] - 1][k] == 0:
-                            return False
+                            return False 
 
         return True
 
 class Item(object):
-    def __init__(self, name, width, height, depth,Id,weight):
+    def __init__(self, name, width, height, depth,id,weight):
         self.name = name
 
         # dimensions w x h x d
         self.width = int(width)
         self.height = int(height)
         self.depth = int(depth)
-        self.Id= int(Id)
+        self.id= int(id)
         self.weight=int(weight)
-        
-        if self.width <= 0 or self.height <= 0 or self.depth <= 0:
+
+        if self.width <= 0 or self.height <= 0 or self.depth <= 0 or self.id<=0 or self.weight<=0 :
             print("Wrong item dimensions")
             exit(1)
 
@@ -108,24 +112,17 @@ class Item(object):
         self.RT = 0
 
     def print_data(self):
-        print(self.name, "|", "Dimensions:", self.width, "x", self.height, "x", self.depth, "|", "Position [x, y, z]:", self.pos, "| rotation type:", self.RT)
+        print(self.name, self.id, "|", "Dimensions:", self.width, "x", self.height, "x", self.depth, "|", "Position [x, y, z]:", self.pos, "| rotation type:", self.RT)
     def list_data(self):
-        plis=[self.width,self.height,self.depth,self.pos,self.Id,self.RT]
+        plis=[self.width,self.height,self.depth,self.pos,self.id,self.RT]
         return plis
+
     # rotations
     def rotate(self, type):
         if type == 0: # normal position
             return (self.width, self.height, self.depth)
-        elif type == 1: # rotate Z
+        else: # rotate Z
             return (self.height, self.width, self.depth)
-        elif type == 2: # rotate Y
-            return (self.width, self.depth, self.height)
-        elif type == 3: # rotate X, rotate Y
-            return (self.depth, self.width, self.height)
-        elif type == 4: # rotate X
-            return (self.depth, self.height, self.width)
-        else: # rotate X, rotate Z
-            return (self.height, self.depth, self.width)
 
 class Items_List(object):
     def __init__(self):
@@ -144,6 +141,7 @@ class Items_List(object):
             for index in range(len(self.items)):
                 print(str(index) + ")")
                 self.items[index].print_data()
+    
 
 def get_items_total_volume(item_list):
     volume_T = 0
@@ -183,11 +181,12 @@ def bp3D(current_bin, Items): # (Bin object, list of Item objects)
     # the item need to be small enough to fit in container
     for index in range(len(notPacked)):
         # try item's every rotation
-        for rotation_type in range(6):
+        for rotation_type in range(2):
             # if it don't fit try the next one
+
             if notPacked[index].rotate(rotation_type)[0] > current_bin.width or \
-                notPacked[index].rotate(rotation_type)[1] > current_bin.height or \
-                notPacked[index].rotate(rotation_type)[2] > current_bin.depth:
+                 notPacked[index].rotate(rotation_type)[1] > current_bin.height or\
+                 notPacked[index].rotate(rotation_type)[2] > current_bin.depth:
                 pass
             # if I find an item that fits, pack it and break
             else:
@@ -245,7 +244,7 @@ def bp3D(current_bin, Items): # (Bin object, list of Item objects)
                             ]
 
                         # try to find a rotation type for packing, try all of them, see rotation function from Item class or readMe
-                        for k in range(6):
+                        for k in range(2):
                             if current_bin.can_be_packed(current_item, pivot, k):
                                 # if I find a rotation which make the item fitting, choose it
                                 current_bin.pack(current_item, pivot, k)
