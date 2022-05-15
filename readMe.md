@@ -30,6 +30,7 @@ The algorithm doesn't offer the **optimal solution** sometimes but the average w
 - Modules:
   - copy
   - math
+  - vpython
 
 ## Setup
 
