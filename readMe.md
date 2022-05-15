@@ -9,7 +9,8 @@ Simple python script that simulates the packaging of rectangular boxes of any si
 - [Setup](#setup)
 - [Purpose](#purpose)
 - [Examples of use](#examples-of-use)
-- [Demonstration](https://drive.google.com/drive/folders/1nXTmqvDrlx_y1rtCVO1UwdR8YNTdkWWf?usp=sharing)
+- [PC Demonstration](https://drive.google.com/file/d/1S7oHB4T9IVIZNX7Cl8djBs1rWuWrrk1X/view?usp=sharing)
+- [SmartPhone Demonstration](https://drive.google.com/file/d/1l5v4ctf5wCyu1WbwWCijZJyaew1R8j4H/view?usp=sharing)
 - [Sources](#Sources)
 
 ## General info
